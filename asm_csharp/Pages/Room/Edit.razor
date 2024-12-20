@@ -1,0 +1,80 @@
+﻿@page "/room/edit/{id:int}"
+@using asm_csharp.Data
+@using MySql.Data.MySqlClient
+<!-- dieu huong -->
+@inject NavigationManager navigationManager
+
+<h3>Edit Room: </h3>
+
+<EditForm Model="room" OnValidSubmit="HandleUpdateRoom">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <InputText @bind-Value=room.Name_room class="form-control" name="textBox1"/>
+        <ValidationMessage For="() => room.Name_room" />
+    </div>
+
+  
+
+    <div class="mb-3">
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Success"><Icon Name="IconName.Save"></Icon> Save</Button>
+        <Button Type="ButtonType.Link" Color="ButtonColor.Primary" To="room"><Icon Name="IconName.BoxArrowLeft"></Icon> Back</Button>
+
+    </div>
+</EditForm>
+
+@code {
+    
+    [Parameter]
+    public int id { get; set; }
+    private Room room = new Room();
+
+    protected override void OnParametersSet() // Lay thong tin cu theo ID
+    {
+        if (id != 0)
+        {
+            room = GetRoomById();
+        }
+    }
+
+    private Room GetRoomById()
+    {
+        Room c = new Room();
+        try
+        {
+            string SqlGetRoom = $"SELECT * FROM rooms WHERE id = {id}";
+            MySqlConnection conn = DBMySql.GetMySqlConnection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = SqlGetRoom;
+            MySqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                c.Id = reader.GetInt32("id");
+                c.Name_room = reader.GetString("name");
+            }
+
+            conn.Close();
+
+        }
+        catch (Exception p) { }
+        return c;
+    }
+
+    private void HandleUpdateRoom()
+    {
+        string name = room.Name_room;
+        try
+        {
+            string SqlUpdate = $"UPDATE rooms SET name = '{name}' WHERE id = {id}";
+            MySqlConnection conn = DBMySql.GetMySqlConnection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = SqlUpdate;
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            navigationManager.NavigateTo("room");
+        }
+        catch (Exception ex) { }
+    }
+}

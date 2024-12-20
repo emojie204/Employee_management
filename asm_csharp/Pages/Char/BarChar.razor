@@ -1,0 +1,87 @@
+﻿@page "/char"
+@using BlazorBootstrap
+@using asm_csharp.Data
+@using MySql.Data.MySqlClient
+@inject NavigationManager navigationManager
+<BarChart @ref="barChart" Width="1000" Height="600" />
+
+@code {
+    
+    private string Name { get; set; } = "";
+    private BarChart barChart = default!;
+    private BarChartOptions barChartOptions = default!;
+    private ChartData chartData = default!;
+    private List<Employee> employees;
+
+    protected override void OnInitialized()
+    {
+        employees = GetEmployees();
+        var labels = employees.Select(e => e.Name).ToList();
+        var data = employees.Select(e => (double)e.Salary).ToList();
+        var datasets = new List<IChartDataset>();
+
+        var dataset1 = new BarChartDataset()
+            {
+                Data = data,
+
+                BackgroundColor = new List<string> {  },
+
+                BorderWidth = new List<double> { 0 },
+            };
+        datasets.Add(dataset1);
+
+        chartData = new ChartData { Labels = labels, Datasets = datasets };
+
+        barChartOptions = new BarChartOptions();
+        barChartOptions.Responsive = true;
+        barChartOptions.Interaction = new Interaction { Mode = InteractionMode.Y };
+        barChartOptions.IndexAxis = "y";
+
+        barChartOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Salary", Display = true };
+        barChartOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Employees", Display = true };
+
+        barChartOptions.Plugins.Legend.Display = false;
+    }
+    private List<Employee> GetEmployees()
+    {
+        List<Employee> list = new List<Employee>();
+        try
+        {
+            string sqlGetEmployees = $"SELECT employees.name , employees.salary FROM employees ";
+            MySqlConnection conn = DBMySql.GetMySqlConnection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = sqlGetEmployees;
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Employee c = new Employee();
+
+                c.Name = reader.GetString("name");
+
+                c.Salary = reader.GetDouble("salary");
+
+                list.Add(c);
+
+            }
+            conn.Close();
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+        return list;
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await barChart.InitializeAsync(chartData, barChartOptions);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+   
+}

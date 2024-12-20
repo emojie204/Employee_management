@@ -1,0 +1,146 @@
+﻿@page "/employee"
+@using BlazorBootstrap
+@using asm_csharp.Data
+@using MySql.Data.MySqlClient
+@inject NavigationManager navigationManager
+
+<PageTitle>Employee</PageTitle>
+<h3>List of Employees</h3>
+ <Button Type="ButtonType.Link" Color="ButtonColor.Primary" To="employee/create" Class="mb-3">+ Create a new Employee</Button>
+<Grid TItem="Employee"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="EmployeeDataProvider"
+      AllowFiltering="true"
+
+
+      Responsive="true">
+
+    <GridColumn TItem="Employee" HeaderText="Id" PropertyName="Id" SortKeySelector="item => item.Id">
+        @context.Id
+    </GridColumn>
+    <GridColumn TItem="Employee" HeaderText="Name" PropertyName="Name" SortKeySelector="item => item.Name">
+        @context.Name
+   </GridColumn>
+   <GridColumn TItem="Employee" HeaderText="User name" PropertyName="User_name" SortKeySelector="item => item.User_name">
+        @context.User_name
+   </GridColumn>
+   <GridColumn TItem="Employee" HeaderText="Email" PropertyName="Email" SortKeySelector="item => item.Email">
+        @context.Email
+   </GridColumn>
+   <GridColumn TItem="Employee" HeaderText="Password" PropertyName="Password" SortKeySelector="item => item.Password">
+        @context.Password
+   </GridColumn>
+   <GridColumn TItem="Employee" HeaderText="Salary" PropertyName="Salary" SortKeySelector="item => item.Salary">
+        @context.Salary
+   </GridColumn>
+
+    <GridColumn TItem="Employee" HeaderText="Image User" PropertyName="Img_user" SortKeySelector="item => item.Img_user">
+        <img  src="/uploads/@context.Img_user" alt="User Image" width="200" heigh="200"/>
+   </GridColumn>
+   <GridColumn TItem="Employee" HeaderText="Room Name" PropertyName="Room_name" SortKeySelector="item => item.Room_name">
+        @context.Room_name
+   </GridColumn>
+    <GridColumn TItem="Employee" HeaderText="Status" PropertyName="Name" SortKeySelector="item => item.Is_deleted">
+        @if (@context.Is_deleted == 1)
+        {
+                               <Button Color="ButtonColor.Success" Disabled="true"> Active </Button>
+        }
+        @if (@context.Is_deleted == 0)
+        {
+                               <Button Color="ButtonColor.Warning" Disabled="true"> Deleted </Button>
+        }
+    </GridColumn>
+    <GridColumn TItem="Employee" HeaderText="Action">
+        @if (@context.Is_deleted == 1)
+        {
+            <Button Type="ButtonType.Link" Color="ButtonColor.Primary"  To=@($"employee/edit/{@context.Id}")><Icon Name="IconName.Pen"></Icon> Edit</Button>
+            <Button Type="ButtonType.Button" Color="ButtonColor.Danger" 
+            @onclick="(Id)=>DeleteEmployee(context.Id)"><Icon Name="IconName.ExclamationTriangle"></Icon> Delete</Button>
+        }
+        else if (@context.Is_deleted == 0)
+        {
+            <Button Type="ButtonType.Link" Color="ButtonColor.Primary" Disabled="true" ><Icon Name="IconName.Pen"></Icon> Edit</Button>
+            <Button Type="ButtonType.Button" Color="ButtonColor.Danger" Disabled="true"><Icon Name="IconName.ExclamationTriangle"></Icon> Delete</Button>
+        }
+
+
+
+    </GridColumn>
+
+
+</Grid>
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private List<Employee> employees;
+    protected override void OnInitialized()
+    {
+        employees = GetEmployees();
+    }
+    private async Task<GridDataProviderResult<Employee>> EmployeeDataProvider(GridDataProviderRequest<Employee> request)
+    {
+        if (employees is null) // pull employees only one time for client-side filtering, sorting, and paging
+            employees = GetEmployees(); // call a service or an API to pull the employees
+
+        return await Task.FromResult(request.ApplyTo(employees));
+    }
+
+    private static List<Employee> GetEmployees()
+    {
+        List<Employee> list = new List<Employee>();
+        try
+        {
+            string sqlGetEmployees = "SELECT employees.id ,employees.name , employees.user_name, employees.email , employees.`password` , employees.salary , employees.is_deleted , employees.img_user , employees.room_id , rooms.name AS room_name FROM employees JOIN rooms ON employees.room_id = rooms.id";
+            MySqlConnection conn = DBMySql.GetMySqlConnection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = sqlGetEmployees;
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Employee c = new Employee();
+                c.Id = reader.GetInt32("id");
+                c.Name = reader.GetString("name");
+                c.User_name = reader.GetString("user_name");
+                c.Email = reader.GetString("email");
+                c.Password = reader.GetString("password");
+                c.Salary = reader.GetDouble("salary");
+                c.Is_deleted = reader.GetInt32("is_deleted");
+                c.Img_user = reader.GetString("img_user");
+                c.Room_name = reader.GetString("room_name");
+                list.Add(c);
+
+            }
+            conn.Close();
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+        return list;
+    }
+
+
+    private void DeleteEmployee(int Id)
+    {
+        try
+        {
+            string SqlDelete = $"UPDATE employees SET is_deleted = 0 WHERE id = {Id}";
+            MySqlConnection conn = DBMySql.GetMySqlConnection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = SqlDelete;
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            navigationManager.NavigateTo("employee", forceLoad: true);
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+    }
+
+}

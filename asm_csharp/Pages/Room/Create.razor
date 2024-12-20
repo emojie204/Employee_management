@@ -1,0 +1,44 @@
+﻿@page "/room/create"
+@using asm_csharp.Data
+@using MySql.Data.MySqlClient
+@inject NavigationManager navigationManager
+<h3>Create a new room</h3>
+<EditForm Model="room" OnValidSubmit="HandleCreateRoom">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <InputText @bind-Value=room.Name_room class="form-control" name="textBox1"/>
+        <ValidationMessage For="() => room.Name_room" />
+    </div>
+
+
+
+    <div class="mb-3">
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Success"><Icon Name="IconName.Save"></Icon> Save</Button>
+        <Button Type="ButtonType.Link" Color="ButtonColor.Primary" To="room" ><Icon Name="IconName.BoxArrowLeft"></Icon> Back</Button>
+
+    </div>
+</EditForm>
+@code {
+
+   
+    private Room room = new Room();
+
+
+    private void HandleCreateRoom()
+    {
+        string name = room.Name_room;
+        try
+        {
+            string SqlUpdate = $"Insert into rooms(name) Values ('{name}')";
+            MySqlConnection conn = DBMySql.GetMySqlConnection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = SqlUpdate;
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            navigationManager.NavigateTo("room");
+        }
+        catch (Exception ex) { }
+    }
+}

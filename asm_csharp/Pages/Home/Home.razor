@@ -1,0 +1,76 @@
+﻿@page "/home"
+@using BlazorBootstrap
+@using asm_csharp.Data
+@using MySql.Data.MySqlClient
+@inject NavigationManager navigationManager
+
+
+<div class="row">
+    
+    @foreach (var employee in employees)
+    {
+        <Card Class="mb-4" Style="width:18rem;">
+              <img class="rounded-top" src="@(string.IsNullOrEmpty(employee.Img_user) ? "/uploads/placeholder.png" : $"/uploads/{employee.Img_user}")" alt="placeholder" width="250" heigh="200"/>
+              <CardBody width="200" heigh="200">
+            <CardTitle>@employee.Name</CardTitle>
+            <CardSubTitle Class="mb-2 text-muted">@employee.Email</CardSubTitle>
+            <CardText>Salary: @employee.Salary</CardText>
+            <CardText>Room: @employee.Room_name</CardText>
+            
+          </CardBody>
+        </Card>
+    }
+    
+</div>
+@code {
+    
+
+    private List<Employee> employees;
+    protected override void OnInitialized()
+    {
+        employees = GetEmployees();
+    }
+    private async Task<GridDataProviderResult<Employee>> EmployeeDataProvider(GridDataProviderRequest<Employee> request)
+    {
+        if (employees is null) // pull employees only one time for client-side filtering, sorting, and paging
+            employees = GetEmployees(); // call a service or an API to pull the employees
+
+        return await Task.FromResult(request.ApplyTo(employees));
+    }
+
+    private static List<Employee> GetEmployees()
+    {
+        List<Employee> list = new List<Employee>();
+        try
+        {
+            string sqlGetEmployees = "SELECT employees.id ,employees.name , employees.user_name, employees.email , employees.`password` , employees.salary , employees.is_deleted , employees.img_user , employees.room_id , rooms.name AS room_name FROM employees JOIN rooms ON employees.room_id = rooms.id";
+            MySqlConnection conn = DBMySql.GetMySqlConnection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = sqlGetEmployees;
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Employee c = new Employee();
+                c.Id = reader.GetInt32("id");
+                c.Name = reader.GetString("name");
+                c.User_name = reader.GetString("user_name");
+                c.Email = reader.GetString("email");
+                c.Password = reader.GetString("password");
+                c.Salary = reader.GetDouble("salary");
+                c.Is_deleted = reader.GetInt32("is_deleted");
+                c.Img_user = reader.GetString("img_user");
+                c.Room_name = reader.GetString("room_name");
+                list.Add(c);
+
+            }
+            conn.Close();
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+        return list;
+    }
+    }

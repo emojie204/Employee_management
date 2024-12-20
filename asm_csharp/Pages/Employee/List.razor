@@ -1,0 +1,149 @@
+﻿@* 
+@page "/product/edit/{id:int}"
+@using D05K14Blazor.Data
+@using MySql.Data.MySqlClient
+@inject NavigationManager navigationManager
+<h3>Edit Product: @product.ProductName</h3>
+<EditForm Model="product" OnSubmit="HandleUpdateProduct">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label class="form-label">Product Name</label>
+        <InputText @bind-Value=product.ProductName class="form-control" />
+        <ValidationMessage For="() => product.ProductName" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Product Quantity</label>
+        <InputSelect @bind-Value=product.ProductLevel class="form-control">
+            <option value="1"> 1</option>
+            <option value="2"> 2</option>
+        </InputSelect>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Product Price</label>
+        <InputText @bind-Value=product.ProductPrice class="form-control" />
+        <ValidationMessage For="() => product.ProductPrice" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Product Image</label>
+        <InputFile class="form-control" OnChange="HandleSelectedFile"></InputFile>
+        @if (avatarUrl != "")
+        {
+                <img src="@avatarUrl" style="max-width:200px" />
+        }
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Status</label>
+        <InputSelect @bind-Value=product.IsDelete class="form-control">
+            <option value="0">Active</option>
+            <option value="1">Deleted</option>
+        </InputSelect>
+    </div>
+    <div class="mb-3">
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Save</Button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    private Products product = new Products();
+    private IBrowserFile selectedFile;
+    private string avatarUrl = "";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (id != 0)
+        {
+            product = await GetProductById();
+        }
+    }
+
+    private async Task<Products> GetProductById()
+    {
+        Products c = new Products();
+        try
+        {
+            if (selectedFile != null)
+            {
+                await UploadSelectedFile(selectedFile);
+            }
+            string SqlGetProduct = $"SELECT * FROM products WHERE product_id = {id}";
+            using (MySqlConnection conn = DBMysql.GetMySqlConnection())
+            {
+                await conn.OpenAsync();
+                using (MySqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = SqlGetProduct;
+                    using (MySqlDataReader reader = (MySqlDataReader)await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            c.ProductId = reader.GetInt32("product_id");
+                            c.ProductName = reader.GetString("product_name"); c.ProductLevel = reader.GetInt32("product_level");
+                            c.ProductPrice = reader.GetString("product_price");
+                            avatarUrl = reader.GetString("avatar_url");
+                            c.ProductImg = reader.GetString("avatar_url");
+                            c.IsDelete = reader.GetInt32("isDeleted");
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exception
+        }
+        return c;
+    }
+
+    private async Task HandleSelectedFile(InputFileChangeEventArgs ex)
+    {
+        selectedFile = ex.File;
+        var resizeFile = await ex.File.RequestImageFileAsync("image/jpeg", 500, 500);
+        var buffer = new byte[resizeFile.Size];
+        await resizeFile.OpenReadStream(1000000).ReadAsync(buffer);
+        avatarUrl = $"data:image/jpeg;base64,{Convert.ToBase64String(buffer)}";
+    }
+
+    private async void HandleUpdateProduct()
+    {
+        try
+        {
+            await UploadSelectedFile(selectedFile);
+            string productName = product.ProductName;
+            int productLevel = product.ProductLevel;
+            string productPrice = product.ProductPrice;
+            string productImg = product.ProductImg;
+            int status = product.IsDelete;
+
+            MySqlConnection conn = DBMysql.GetMySqlConnection();
+            conn.Open();
+            string SQLUpdate = $"UPDATE products SET product_name = '{productName}', product_level = {productLevel}, product_price = '{productPrice}', avatar_url = '{productImg}', isDeleted = {status} WHERE product_id = {id}";
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = SQLUpdate;
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+
+            navigationManager.NavigateTo("product");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task UploadSelectedFile(IBrowserFile file)
+    {
+        string fileName = file.Name;
+        var folderPath = Path.Combine("wwwroot", "uploads"); // wwwroot/uploads
+        var filePath = Path.Combine(folderPath, fileName);
+        Directory.CreateDirectory(folderPath);
+        using (var fileStream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.OpenReadStream(10000000).CopyToAsync(fileStream);
+        }
+        product.ProductImg = $"uploads/{fileName}";
+    }
+} *@

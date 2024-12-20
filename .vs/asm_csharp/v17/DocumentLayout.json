@@ -1,0 +1,137 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|c:\\users\\acer\\source\\repos\\asm_csharp\\asm_csharp\\pages\\home\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|solutionrelative:asm_csharp\\pages\\home\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|c:\\users\\acer\\source\\repos\\asm_csharp\\asm_csharp\\pages\\employee\\create.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|solutionrelative:asm_csharp\\pages\\employee\\create.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|c:\\users\\acer\\source\\repos\\asm_csharp\\asm_csharp\\pages\\_host.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|solutionrelative:asm_csharp\\pages\\_host.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|c:\\users\\acer\\source\\repos\\asm_csharp\\asm_csharp\\shared\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|solutionrelative:asm_csharp\\shared\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|c:\\users\\acer\\source\\repos\\asm_csharp\\asm_csharp\\pages\\employee\\editemployee.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|solutionrelative:asm_csharp\\pages\\employee\\editemployee.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|c:\\users\\acer\\source\\repos\\asm_csharp\\asm_csharp\\pages\\employee\\listemployee.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|solutionrelative:asm_csharp\\pages\\employee\\listemployee.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|c:\\users\\acer\\source\\repos\\asm_csharp\\asm_csharp\\pages\\room\\create.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9C30F4E-190E-4EF7-A3F7-A04A178DE75D}|asm_csharp\\asm_csharp.csproj|solutionrelative:asm_csharp\\pages\\room\\create.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Shared\\NavMenu.razor",
+              "RelativeDocumentMoniker": "asm_csharp\\Shared\\NavMenu.razor",
+              "ToolTip": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Shared\\NavMenu.razor",
+              "RelativeToolTip": "asm_csharp\\Shared\\NavMenu.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-06-27T05:05:26.613Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "_Host.cshtml",
+              "DocumentMoniker": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Pages\\_Host.cshtml",
+              "RelativeDocumentMoniker": "asm_csharp\\Pages\\_Host.cshtml",
+              "ToolTip": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Pages\\_Host.cshtml",
+              "RelativeToolTip": "asm_csharp\\Pages\\_Host.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-06-27T05:13:40.669Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EditEmployee.razor",
+              "DocumentMoniker": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Pages\\Employee\\EditEmployee.razor",
+              "RelativeDocumentMoniker": "asm_csharp\\Pages\\Employee\\EditEmployee.razor",
+              "ToolTip": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Pages\\Employee\\EditEmployee.razor",
+              "RelativeToolTip": "asm_csharp\\Pages\\Employee\\EditEmployee.razor",
+              "ViewState": "AQIAAFoAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-06-27T01:43:06.557Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Create.razor",
+              "DocumentMoniker": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Pages\\Employee\\Create.razor",
+              "RelativeDocumentMoniker": "asm_csharp\\Pages\\Employee\\Create.razor",
+              "ToolTip": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Pages\\Employee\\Create.razor",
+              "RelativeToolTip": "asm_csharp\\Pages\\Employee\\Create.razor",
+              "ViewState": "AQIAAFoAAAAAAAAAAAAAACEAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-06-27T01:41:39.453Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Create.razor",
+              "DocumentMoniker": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Pages\\Room\\Create.razor",
+              "RelativeDocumentMoniker": "asm_csharp\\Pages\\Room\\Create.razor",
+              "ToolTip": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Pages\\Room\\Create.razor",
+              "RelativeToolTip": "asm_csharp\\Pages\\Room\\Create.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACEAAABAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-06-27T01:31:33.431Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Home.razor",
+              "DocumentMoniker": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Pages\\Home\\Home.razor",
+              "RelativeDocumentMoniker": "asm_csharp\\Pages\\Home\\Home.razor",
+              "ToolTip": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Pages\\Home\\Home.razor",
+              "RelativeToolTip": "asm_csharp\\Pages\\Home\\Home.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAACyAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-06-27T01:23:49.202Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ListEmployee.razor",
+              "DocumentMoniker": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Pages\\Employee\\ListEmployee.razor",
+              "RelativeDocumentMoniker": "asm_csharp\\Pages\\Employee\\ListEmployee.razor",
+              "ToolTip": "C:\\Users\\Acer\\source\\repos\\asm_csharp\\asm_csharp\\Pages\\Employee\\ListEmployee.razor",
+              "RelativeToolTip": "asm_csharp\\Pages\\Employee\\ListEmployee.razor",
+              "ViewState": "AQIAABsAAAAAAAAAAAAAACUAAABXAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-06-24T11:14:45.924Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+﻿@page "/employee/edit/{id:int}"
+@using asm_csharp.Data
+@using MySql.Data.MySqlClient
+@inject NavigationManager navigationManager
+<h3>Edit Employee : @employee.Name</h3>
+
+
+ <EditForm Model="employee" OnValidSubmit="HandleUpdateEmployee">
+	 <DataAnnotationsValidator />
+	 <div class="row">
+		 <div class="col-6">
+			 <div class="mb-3">
+				<label class="form-label">Name</label>
+				<InputText @bind-Value=employee.Name class="form-control"/>
+				<ValidationMessage For="() => employee.Name" />
+			</div>
+			<div class="mb-3">
+				<label class="form-label">User Name</label>
+				<InputText @bind-Value=employee.User_name class="form-control"/>
+				<ValidationMessage For="() => employee.User_name" />
+			</div>
+			<div class="mb-3">
+				<label class="form-label">Email</label>
+				<InputText @bind-Value=employee.Email class="form-control"/>
+				<ValidationMessage For="() => employee.Email" />
+			</div>
+			<div class="mb-3">
+				<label class="form-label">Password</label>
+				<InputText @bind-Value=employee.Password class="form-control"/>
+				<ValidationMessage For="() => employee.Password" />
+			</div>
+			<div class="mb-3">
+				<label class="form-label">Salary</label>
+				<InputNumber @bind-Value=employee.Salary class="form-control"/>
+				@if (employee.Salary < 0)
+				{
+							<Alert Color="AlertColor.Danger"> <Icon Name="IconName.ExclamationTriangleFill" class="me-2"></Icon>Positive numbers require</Alert>
+				}
+				<ValidationMessage For="() => employee.Salary" />
+			</div>
+			
+			<div class="mb-3">
+				<label class="form-label">Status</label>
+				<InputSelect @bind-Value=employee.Is_deleted class="form-control">
+				<option value="1">Active</option>
+				<option value="0">Delete</option>
+				</InputSelect>
+			</div>
+			<div class="mb-3">
+				<label class="form-label">Room Id</label>
+				<InputNumber @bind-Value=employee.Room_id class="form-control"/>
+				<ValidationMessage For="() => employee.Room_id" />
+			</div>
+
+
+		 </div>
+		  <div class="col-6">
+			 <div class=mb-3>
+				<label class="form-label">Avatar</label>
+				<InputFile  class="form-control" OnChange="HandleSelectedFile"></InputFile>
+				@if (avatarUrl != null)
+				{ 
+						<img src="@avatarUrl" alt="@avatarUrl" style="max-width: 500px;" />
+				}
+				
+			</div>
+			<div class="mb-3">
+				@if (employee.Salary < 0)
+				{
+							<Button Type="ButtonType.Submit" Color="ButtonColor.Success" Disabled="true"><Icon Name="IconName.Save"></Icon> Save</Button>
+				}
+				else
+				{
+						<Button Type
+						="ButtonType.Submit" Color
+							="ButtonColor.Success" Disabled="false"><Icon Name
+							="IconName.Save"></Icon> Save</Button>
+				}
+			</div>
+			<div class="mb-3">
+				<Button Type="ButtonType.Link" Color="ButtonColor.Primary" To="/employee"><Icon Name="IconName.BoxArrowLeft"></Icon> Back</Button>
+			</div>
+		<div/>
+	</div>
+		</div>
+ </EditForm>
+
+@code {
+	[Parameter]
+	public int id { get; set; }
+	private Employee employee = new Employee();
+	private IBrowserFile selectedFile;
+	private string avatarUrl = "";
+	
+
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if (id != 0)
+		{
+			employee = await GetEmployeeById();
+		}
+	}
+
+
+	private async Task<Employee> GetEmployeeById()
+	{
+		Employee d = new Employee();
+		try
+		{
+			if (selectedFile != null)
+			{
+				await UploadSelectedFile(selectedFile);
+			}
+			string SqlGetEmployee = $"SELECT * FROM employees WHERE id = {id}";
+			
+			MySqlConnection conn = DBMySql.GetMySqlConnection();
+			conn.Open();
+			MySqlCommand cmd = conn.CreateCommand();
+			cmd.CommandText = SqlGetEmployee;
+			MySqlDataReader reader = cmd.ExecuteReader();
+			if (reader.Read())
+			{
+				d.Id = reader.GetInt32("id");
+				d.Name = reader.GetString("name");
+				d.User_name = reader.GetString("user_name"); 
+				d.Email = reader.GetString("email"); 
+				d.Password = reader.GetString("password"); 
+				d.Salary = reader.GetDouble("salary");
+				d.Is_deleted = reader.GetInt32("is_deleted");
+				d.Room_id = reader.GetInt32("room_id");
+				d.Img_user = reader.GetString("img_user");
+				avatarUrl = reader.GetString("img_user");
+		
+			}
+		}
+		catch (Exception ex)
+		{
+			
+		}
+		return d;
+	}
+
+
+	private async Task HandleUpdateEmployee()
+	{
+		try
+		{
+			string name = employee.Name;
+			string email = employee.Email;
+			string password = employee.Password;
+			string user_name = employee.User_name;
+			double salary = employee.Salary;
+			int room_id = employee.Room_id;
+			int is_deleted = employee.Is_deleted;
+			string url_avatar = employee.Img_user;
+			string SQLUpdate = $"UPDATE employees SET name = '{name}', email = '{email}', password = '{password}', user_name = '{user_name}', salary = {salary}, room_id = {room_id}, is_deleted = {is_deleted}, img_user = '{url_avatar}' WHERE id = {id}";
+
+			MySqlConnection conn = DBMySql.GetMySqlConnection();
+			conn.Open();
+			MySqlCommand cmd = conn.CreateCommand();
+			cmd.CommandText = SQLUpdate;
+			cmd.ExecuteNonQuery();
+			conn.Close();
+			navigationManager.NavigateTo("employee");
+		}
+		catch (Exception e) { }
+	}
+	private async Task HandleSelectedFile(InputFileChangeEventArgs e)
+	{
+		selectedFile = e.File;
+		var resizeFile = await e.File.RequestImageFileAsync("image/jpeg", 500, 500);
+		var buffer = new byte[resizeFile.Size];
+		await resizeFile.OpenReadStream().ReadAsync(buffer);
+		avatarUrl = $"data:image/jpeg;base64,{Convert.ToBase64String(buffer)}";
+	}
+	private async Task UploadSelectedFile(IBrowserFile file)
+	{
+		var fileName = file.Name;
+		var folderPath = Path.Combine("wwwroot", "uploads"); //wwwroot/uploads
+		var filePath = Path.Combine(folderPath, fileName);
+		Directory.CreateDirectory(folderPath);
+		using (var fileStream = new FileStream(filePath, FileMode.Create))
+		{
+			await file.OpenReadStream().CopyToAsync(fileStream);
+		}
+		employee.Img_user = $"{fileName}";
+	}
+	
+}

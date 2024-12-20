@@ -1,0 +1,101 @@
+﻿@page "/room"
+@using BlazorBootstrap
+@using asm_csharp.Data
+@using MySql.Data.MySqlClient
+@inject NavigationManager navigationManager
+
+<PageTitle>Room</PageTitle>
+<h3>List of Room</h3>
+ <Button Type="ButtonType.Link" Color="ButtonColor.Primary" To="room/create" Class="mb-3">+ Create a new Room</Button>
+<Grid TItem="Room"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="RoomDataProvider"
+      AllowFiltering="true"
+      
+      
+      Responsive="true">
+
+    <GridColumn TItem="Room" HeaderText="Id" PropertyName="Id" SortKeySelector="item => item.Id">
+        @context.Id
+    </GridColumn>
+    <GridColumn TItem="Room" HeaderText="Name" PropertyName="Name_room" SortKeySelector="item => item.Name_room">
+        @context.Name_room
+   </GridColumn>
+    <GridColumn TItem="Room" HeaderText="Action">
+        <Button Type="ButtonType.Link" Color="ButtonColor.Primary" To=@($"room/edit/{@context.Id}")><Icon Name="IconName.Pen"></Icon> Edit</Button>
+        <Button Type="ButtonType.Button" Color="ButtonColor.Danger" 
+@onclick="(Id)=>DeleteRoom(context.Id)"><Icon Name="IconName.ExclamationTriangle"></Icon> Delete</Button>
+        <Button Type="ButtonType.Link" Color="ButtonColor.Success" To=@($"room/infor/{@context.Id}")><Icon Name="IconName.InfoCircle"></Icon> Information</Button>
+
+
+    </GridColumn>
+
+
+</Grid>
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private List<Room> rooms;
+    protected override void OnInitialized()
+    {
+        rooms = GetRooms();
+    }
+    private async Task<GridDataProviderResult<Room>> RoomDataProvider(GridDataProviderRequest<Room> request)
+    {
+        if (rooms is null) // pull employees only one time for client-side filtering, sorting, and paging
+            rooms = GetRooms(); // call a service or an API to pull the employees
+
+        return await Task.FromResult(request.ApplyTo(rooms));
+    }
+
+    private static List<Room> GetRooms()
+    {
+        List<Room> list = new List<Room>();
+        try
+        {
+            string sqlGetRooms = "Select * from rooms order by id";
+            MySqlConnection conn = DBMySql.GetMySqlConnection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = sqlGetRooms;
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Room c = new Room();
+                c.Id = reader.GetInt32("id");
+                c.Name_room = reader.GetString("name");
+                list.Add(c);
+
+            }
+            conn.Close();
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+        return list;
+    }
+
+
+    private void DeleteRoom(int Id)
+    {
+        try
+        {
+            string SqlDelete = $"DELETE FROM  rooms WHERE id= {Id}";
+            MySqlConnection conn = DBMySql.GetMySqlConnection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = SqlDelete;
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            navigationManager.NavigateTo("room", forceLoad: true);
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+
+}
